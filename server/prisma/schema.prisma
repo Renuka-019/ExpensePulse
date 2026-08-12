@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         String        @default("user") // "user" or "admin"
+  currency     String        @default("USD")
+  avatarUrl    String?
+  createdAt    DateTime      @default(now())
+  lastActive   DateTime      @default(now())
+  
+  transactions Transaction[]
+  categories   Category[]
+  budgets      Budget[]
+}
+
+model Transaction {
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type               String   // "income" or "expense"
+  amount             Float
+  category           String
+  date               DateTime
+  note               String?
+  paymentMethod      String   @default("Cash")
+  isRecurring        Boolean  @default(false)
+  recurrenceInterval String?  // "daily", "weekly", "monthly"
+  createdAt          DateTime @default(now())
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  userId    String?  // Nullable for default global categories
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      String   // "income" or "expense"
+  colorTag  String   @default("#6366f1")
+  createdAt DateTime @default(now())
+}
+
+model Budget {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     String
+  monthlyLimit Float
+  month        Int
+  year         Int
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, category, month, year])
+}
