@@ -10,18 +10,20 @@ async function seed() {
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
+  // Passwords are hashed before being stored
   const adminPasswordHash = await bcrypt.hash('Admin123!', 10);
   const userPasswordHash = await bcrypt.hash('User123!', 10);
 
   // 1. Create Admin User
   const admin = await prisma.user.create({
     data: {
-      name: 'Alex Vance (Admin)',
-      email: 'renukaapatil019@gmail.com',
-      passwordHash: renuka@19,
+      name: 'Renuka Patil',
+      email: 'admin@expensetracker.com',
+      passwordHash: adminPasswordHash,
       role: 'admin',
       currency: 'USD',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'
+      avatarUrl:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'
     }
   });
 
@@ -33,11 +35,14 @@ async function seed() {
       passwordHash: userPasswordHash,
       role: 'user',
       currency: 'USD',
-      avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=256&q=80'
+      avatarUrl:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=256&q=80'
     }
   });
 
-  console.log(`✅ Created Admin (${admin.email}) and Demo User (${demoUser.email})`);
+  console.log(
+    `✅ Created Admin (${admin.email}) and Demo User (${demoUser.email})`
+  );
 
   // 3. Create Default Categories
   const defaultCategories = [
@@ -50,8 +55,16 @@ async function seed() {
     { name: 'Healthcare', type: 'expense', colorTag: '#ef4444' },
     { name: 'Subscriptions', type: 'expense', colorTag: '#a855f7' },
     { name: 'Salary', type: 'income', colorTag: '#10b981' },
-    { name: 'Freelance & Side Hustle', type: 'income', colorTag: '#059669' },
-    { name: 'Investments & Dividends', type: 'income', colorTag: '#3b82f6' }
+    {
+      name: 'Freelance & Side Hustle',
+      type: 'income',
+      colorTag: '#059669'
+    },
+    {
+      name: 'Investments & Dividends',
+      type: 'income',
+      colorTag: '#3b82f6'
+    }
   ];
 
   for (const cat of defaultCategories) {
@@ -68,11 +81,19 @@ async function seed() {
 
   // 4. Create Transactions for Demo User across last 6 months
   const now = new Date();
+
   const sampleTransactions = [];
 
   for (let i = 5; i >= 0; i--) {
-    const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 15);
-    const mStr = monthDate.toLocaleString('default', { month: 'long' });
+    const monthDate = new Date(
+      now.getFullYear(),
+      now.getMonth() - i,
+      15
+    );
+
+    const mStr = monthDate.toLocaleString('default', {
+      month: 'long'
+    });
 
     // Monthly Salary
     sampleTransactions.push({
@@ -80,7 +101,11 @@ async function seed() {
       type: 'income',
       amount: 5200,
       category: 'Salary',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 1),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        1
+      ),
       note: `Monthly paycheck for ${mStr}`,
       paymentMethod: 'Bank Transfer'
     });
@@ -92,7 +117,11 @@ async function seed() {
         type: 'income',
         amount: 850,
         category: 'Freelance & Side Hustle',
-        date: new Date(now.getFullYear(), now.getMonth() - i, 12),
+        date: new Date(
+          now.getFullYear(),
+          now.getMonth() - i,
+          12
+        ),
         note: 'Web design freelance project',
         paymentMethod: 'Bank Transfer'
       });
@@ -104,7 +133,11 @@ async function seed() {
       type: 'expense',
       amount: 1650,
       category: 'Housing & Rent',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 2),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        2
+      ),
       note: 'Apartment rent payment',
       paymentMethod: 'Bank Transfer'
     });
@@ -113,9 +146,13 @@ async function seed() {
     sampleTransactions.push({
       userId: demoUser.id,
       type: 'expense',
-      amount: 480 + (i * 30),
+      amount: 480 + i * 30,
       category: 'Food & Dining',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 8),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        8
+      ),
       note: 'Groceries & dining out',
       paymentMethod: 'Credit Card'
     });
@@ -126,7 +163,11 @@ async function seed() {
       type: 'expense',
       amount: 210,
       category: 'Transportation',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 14),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        14
+      ),
       note: 'Gasoline and subway pass',
       paymentMethod: 'Credit Card'
     });
@@ -137,7 +178,11 @@ async function seed() {
       type: 'expense',
       amount: 175,
       category: 'Utilities',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 18),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        18
+      ),
       note: 'Electricity, water, high-speed fiber internet',
       paymentMethod: 'Bank Transfer'
     });
@@ -148,7 +193,11 @@ async function seed() {
       type: 'expense',
       amount: 65,
       category: 'Subscriptions',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 20),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        20
+      ),
       note: 'Netflix, Spotify, GitHub Pro',
       paymentMethod: 'Credit Card',
       isRecurring: true,
@@ -159,19 +208,27 @@ async function seed() {
     sampleTransactions.push({
       userId: demoUser.id,
       type: 'expense',
-      amount: 320 + (i * 25),
+      amount: 320 + i * 25,
       category: 'Shopping',
-      date: new Date(now.getFullYear(), now.getMonth() - i, 24),
+      date: new Date(
+        now.getFullYear(),
+        now.getMonth() - i,
+        24
+      ),
       note: 'Clothing and home items',
       paymentMethod: 'Credit Card'
     });
   }
 
-  for (const t of sampleTransactions) {
-    await prisma.transaction.create({ data: t });
+  for (const transaction of sampleTransactions) {
+    await prisma.transaction.create({
+      data: transaction
+    });
   }
 
-  console.log(`✅ Created ${sampleTransactions.length} historical transactions`);
+  console.log(
+    `✅ Created ${sampleTransactions.length} historical transactions`
+  );
 
   // 5. Create Monthly Budgets for Demo User
   const currentMonth = now.getMonth() + 1;
@@ -182,16 +239,16 @@ async function seed() {
     { category: 'Housing & Rent', monthlyLimit: 1700 },
     { category: 'Transportation', monthlyLimit: 250 },
     { category: 'Utilities', monthlyLimit: 200 },
-    { category: 'Shopping', monthlyLimit: 300 }, // Over budget in current month to show alert badge!
+    { category: 'Shopping', monthlyLimit: 300 },
     { category: 'Subscriptions', monthlyLimit: 80 }
   ];
 
-  for (const b of budgets) {
+  for (const budget of budgets) {
     await prisma.budget.create({
       data: {
         userId: demoUser.id,
-        category: b.category,
-        monthlyLimit: b.monthlyLimit,
+        category: budget.category,
+        monthlyLimit: budget.monthlyLimit,
         month: currentMonth,
         year: currentYear
       }
@@ -204,8 +261,8 @@ async function seed() {
 }
 
 seed()
-  .catch((e) => {
-    console.error('Error during seeding:', e);
+  .catch((error) => {
+    console.error('❌ Error during seeding:', error);
     process.exit(1);
   })
   .finally(async () => {
