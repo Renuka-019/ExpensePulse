@@ -39,6 +39,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Expense Tracker API running on http://localhost:${PORT}`);
+const PORT = Number(process.env.PORT) || 5000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 ExpensePulse API running on port ${PORT}`);
 });
