@@ -17,8 +17,8 @@ async function seed() {
   const admin = await prisma.user.create({
     data: {
       name: 'Alex Vance (Admin)',
-      email: 'admin@expensetracker.com',
-      passwordHash: adminPasswordHash,
+      email: 'renukaapatil019@gmail.com',
+      passwordHash: renuka@19,
       role: 'admin',
       currency: 'USD',
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'
