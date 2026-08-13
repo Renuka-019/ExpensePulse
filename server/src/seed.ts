@@ -14,7 +14,7 @@ async function seed() {
   const userPasswordHash = await bcrypt.hash('User123!', 10);
 
   // 1. Create Admin User
-  const adminPasswordHash = await bcrypt.hash('Admin123!', 10);
+ const adminPasswordHash = await bcrypt.hash('Admin123!', 10);
 
 await prisma.user.upsert({
   where: {
@@ -22,16 +22,18 @@ await prisma.user.upsert({
   },
   update: {
     passwordHash: adminPasswordHash,
-    role: 'ADMIN'
+    role: 'admin'
   },
   create: {
     name: 'Admin',
     email: 'admin@expensetracker.com',
     passwordHash: adminPasswordHash,
-    role: 'ADMIN'
+    role: 'admin',
+    currency: 'USD',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'
   }
 });
-
   // 2. Create Demo User
   const demoUser = await prisma.user.create({
     data: {
